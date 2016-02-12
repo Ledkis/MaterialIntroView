@@ -358,6 +358,8 @@ public class MaterialIntroView extends RelativeLayout {
 
         boolean isTouchOnFocus = (dx + dy) <= Math.pow(radius, 2);
 
+        boolean isInfoTouched = Utils.isViewTouched(event, infoView);
+
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
 
@@ -371,6 +373,10 @@ public class MaterialIntroView extends RelativeLayout {
 
                 if (isTouchOnFocus || dismissOnTouch)
                     dismiss();
+
+                // TODO not work
+//                if(isInfoTouched)
+//                    dismiss();
 
                 if (isTouchOnFocus && isPerformClick) {
                     targetView.getView().performClick();
