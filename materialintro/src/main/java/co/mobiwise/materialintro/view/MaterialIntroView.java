@@ -71,7 +71,9 @@ public class MaterialIntroView extends RelativeLayout {
     /**
      * Animation duration
      */
-    private long fadeAnimationDuration;
+    private long fadeInAnimationDuration;
+
+    private long fadeOutAnimationDuration;
 
     /**
      * circleShape focus on target
@@ -256,7 +258,8 @@ public class MaterialIntroView extends RelativeLayout {
          */
         maskColor = Constants.DEFAULT_MASK_COLOR;
         delayMillis = Constants.DEFAULT_DELAY_MILLIS;
-        fadeAnimationDuration = Constants.DEFAULT_FADE_DURATION;
+        fadeInAnimationDuration = Constants.DEFAULT_FADE_DURATION;
+        fadeOutAnimationDuration = Constants.DEFAULT_FADE_DURATION;
         padding = Constants.DEFAULT_TARGET_PADDING;
         colorTextViewInfo = Constants.DEFAULT_COLOR_TEXTVIEW_INFO;
         focusType = Focus.ALL;
@@ -429,7 +432,7 @@ public class MaterialIntroView extends RelativeLayout {
             @Override
             public void run() {
                 if (isFadeAnimationEnabled)
-                    AnimationFactory.animateFadeIn(MaterialIntroView.this, fadeAnimationDuration, new AnimationListener.OnAnimationStartListener() {
+                    AnimationFactory.animateFadeIn(MaterialIntroView.this, fadeInAnimationDuration, new AnimationListener.OnAnimationStartListener() {
                         @Override
                         public void onAnimationStart() {
                             setVisibility(VISIBLE);
@@ -447,7 +450,7 @@ public class MaterialIntroView extends RelativeLayout {
      */
     private void dismiss() {
         preferencesManager.setDisplayed(materialIntroViewId);
-        AnimationFactory.animateFadeOut(this, fadeAnimationDuration, new AnimationListener.OnAnimationEndListener() {
+        AnimationFactory.animateFadeOut(this, fadeOutAnimationDuration, new AnimationListener.OnAnimationEndListener() {
             @Override
             public void onAnimationEnd() {
                 setVisibility(GONE);
@@ -576,6 +579,14 @@ public class MaterialIntroView extends RelativeLayout {
         this.delayMillis = delayMillis;
     }
 
+    public void setFadeInAnimationDuration(long fadeInAnimationDuration) {
+        this.fadeInAnimationDuration = fadeInAnimationDuration;
+    }
+
+    public void setFadeOutAnimationDuration(long fadeOutAnimationDuration) {
+        this.fadeOutAnimationDuration = fadeOutAnimationDuration;
+    }
+
     private void enableFadeAnimation(boolean isFadeAnimationEnabled) {
         this.isFadeAnimationEnabled = isFadeAnimationEnabled;
     }
@@ -683,6 +694,16 @@ public class MaterialIntroView extends RelativeLayout {
 
         public Builder setDelayMillis(int delayMillis) {
             materialIntroView.setDelay(delayMillis);
+            return this;
+        }
+
+        public Builder setFadeInAnimationDuration(long fadeInAnimationDuration) {
+            materialIntroView.setFadeInAnimationDuration(fadeInAnimationDuration);
+            return this;
+        }
+
+        public Builder setFadeOutAnimationDuration(long fadeOutAnimationDuration) {
+            materialIntroView.setFadeOutAnimationDuration(fadeOutAnimationDuration);
             return this;
         }
 
