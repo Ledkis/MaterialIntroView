@@ -56,8 +56,10 @@ public class Circle {
             int xRight = target.getPoint().x + (target.getRect().right - target.getPoint().x) / 2;
             return new Point(xRight, target.getPoint().y);
         }
-        else
+        else {
+            // Center of the view
             return target.getPoint();
+        }
     }
 
     public void reCalculateAll(){

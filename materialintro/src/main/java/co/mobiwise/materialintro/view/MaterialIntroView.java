@@ -7,13 +7,14 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.os.Build;
 import android.os.Handler;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -191,6 +192,8 @@ public class MaterialIntroView extends RelativeLayout {
      */
     private boolean isPerformClick;
 
+    private boolean showcaseViewCase;
+
     public MaterialIntroView(Context context) {
         super(context);
         init(context);
@@ -210,6 +213,38 @@ public class MaterialIntroView extends RelativeLayout {
     public MaterialIntroView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(context);
+    }
+
+    public static View getCenterShowcaseView(Activity activity, int viewId){
+        LayoutInflater vi = (LayoutInflater) activity.getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View showcaseView = vi.inflate(viewId, null);
+
+        RelativeLayout.LayoutParams showcaseParams = new RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        showcaseView.setLayoutParams(showcaseParams);
+
+        // http://stackoverflow.com/questions/1016896/get-screen-dimensions-in-pixels
+        Display display = activity.getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int widthWin = size.x;
+        int heightWin = size.y;
+
+        // http://stackoverflow.com/questions/8200896/how-to-find-the-width-of-the-a-view-before-the-view-is-displayed
+        showcaseView.measure(widthWin, heightWin);
+
+        float width = showcaseView.getMeasuredWidth();
+        float height = showcaseView.getMeasuredHeight();
+
+        float xPx = (widthWin - width)/2;
+        float yPx = (heightWin - height)/2;
+
+        showcaseView.setX(xPx);
+        showcaseView.setY(yPx);
+
+        return showcaseView;
     }
 
     private void init(Context context) {
@@ -233,6 +268,8 @@ public class MaterialIntroView extends RelativeLayout {
         isInfoEnabled = false;
         isDotViewEnabled = false;
         isPerformClick = false;
+
+        showcaseViewCase = false;
 
         /**
          * initialize objects
@@ -259,11 +296,15 @@ public class MaterialIntroView extends RelativeLayout {
             @Override
             public void onGlobalLayout() {
                 circleShape.reCalculateAll();
-                if (circleShape != null && circleShape.getPoint().y != 0 && !isLayoutCompleted) {
+                // in the case showcaseViewCase y can be 0 : the targetView can be centered
+                if (circleShape != null && (circleShape.getPoint().y != 0 || showcaseViewCase) && !isLayoutCompleted) {
                     if (isInfoEnabled)
                         setInfoLayout();
-                    if(isDotViewEnabled)
+                    if(isDotViewEnabled && !showcaseViewCase)
                         setDotViewLayout();
+                    if(showcaseViewCase)
+                        setTargetViewLayout();
+
                     removeOnGlobalLayoutListener(MaterialIntroView.this, this);
                 }
             }
@@ -307,10 +348,12 @@ public class MaterialIntroView extends RelativeLayout {
         this.canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
         this.canvas.drawColor(maskColor);
 
-        /**
-         * Clear focus area
-         */
-        circleShape.draw(this.canvas, eraser, padding);
+        if(!showcaseViewCase) {
+            /**
+             * Clear focus area
+             */
+            circleShape.draw(this.canvas, eraser, padding);
+        }
 
         canvas.drawBitmap(bitmap, 0, 0, null);
     }
@@ -439,7 +482,7 @@ public class MaterialIntroView extends RelativeLayout {
 
                 RelativeLayout.LayoutParams infoDialogParams = new RelativeLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.FILL_PARENT);
+                        ViewGroup.LayoutParams.MATCH_PARENT);
 
                 if (circleShape.getPoint().y < height / 2) {
                     ((RelativeLayout) infoView).setGravity(Gravity.TOP);
@@ -494,6 +537,25 @@ public class MaterialIntroView extends RelativeLayout {
             }
         });
     }
+
+    private void setTargetViewLayout() {
+
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+
+                if (targetView.getView().getParent() != null)
+                    ((ViewGroup) targetView.getView().getParent()).removeView(targetView.getView());
+
+                targetView.getView().postInvalidate();
+
+                addView(targetView.getView());
+
+                targetView.getView().setVisibility(VISIBLE);
+            }
+        });
+    }
+
 
     /**
      * SETTERS
@@ -585,6 +647,10 @@ public class MaterialIntroView extends RelativeLayout {
 
     private void setPerformClick(boolean isPerformClick){
         this.isPerformClick = isPerformClick;
+    }
+
+    public void setShowcaseViewCase(boolean showcaseViewCase) {
+        this.showcaseViewCase = showcaseViewCase;
     }
 
     /**
@@ -679,8 +745,13 @@ public class MaterialIntroView extends RelativeLayout {
             return this;
         }
 
-        public Builder performClick(boolean isPerformClick){
+        public Builder performClick(boolean isPerformClick) {
             materialIntroView.setPerformClick(isPerformClick);
+            return this;
+        }
+
+        public Builder setShowcaseViewCase(boolean showcaseViewCase){
+            materialIntroView.setShowcaseViewCase(showcaseViewCase);
             return this;
         }
 
