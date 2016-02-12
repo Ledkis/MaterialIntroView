@@ -215,7 +215,7 @@ public class MaterialIntroView extends RelativeLayout {
         init(context);
     }
 
-    public static View getCenterShowcaseView(Activity activity, int viewId){
+    public static View getCenterShowcaseView(Activity activity, int viewId) {
         LayoutInflater vi = (LayoutInflater) activity.getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View showcaseView = vi.inflate(viewId, null);
 
@@ -238,8 +238,8 @@ public class MaterialIntroView extends RelativeLayout {
         float width = showcaseView.getMeasuredWidth();
         float height = showcaseView.getMeasuredHeight();
 
-        float xPx = (widthWin - width)/2;
-        float yPx = (heightWin - height)/2;
+        float xPx = (widthWin - width) / 2;
+        float yPx = (heightWin - height) / 2;
 
         showcaseView.setX(xPx);
         showcaseView.setY(yPx);
@@ -300,9 +300,9 @@ public class MaterialIntroView extends RelativeLayout {
                 if (circleShape != null && (circleShape.getPoint().y != 0 || showcaseViewCase) && !isLayoutCompleted) {
                     if (isInfoEnabled)
                         setInfoLayout();
-                    if(isDotViewEnabled && !showcaseViewCase)
+                    if (isDotViewEnabled && !showcaseViewCase)
                         setDotViewLayout();
-                    if(showcaseViewCase)
+                    if (showcaseViewCase)
                         setTargetViewLayout();
 
                     removeOnGlobalLayoutListener(MaterialIntroView.this, this);
@@ -313,7 +313,7 @@ public class MaterialIntroView extends RelativeLayout {
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public static void removeOnGlobalLayoutListener(View v, ViewTreeObserver.OnGlobalLayoutListener listener){
+    public static void removeOnGlobalLayoutListener(View v, ViewTreeObserver.OnGlobalLayoutListener listener) {
         if (Build.VERSION.SDK_INT < 16) {
             v.getViewTreeObserver().removeGlobalOnLayoutListener(listener);
         } else {
@@ -348,7 +348,7 @@ public class MaterialIntroView extends RelativeLayout {
         this.canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
         this.canvas.drawColor(maskColor);
 
-        if(!showcaseViewCase) {
+        if (!showcaseViewCase) {
             /**
              * Clear focus area
              */
@@ -438,7 +438,7 @@ public class MaterialIntroView extends RelativeLayout {
                 else
                     setVisibility(VISIBLE);
             }
-        },delayMillis);
+        }, delayMillis);
 
     }
 
@@ -459,8 +459,8 @@ public class MaterialIntroView extends RelativeLayout {
         });
     }
 
-    private void removeMaterialView(){
-        if(getParent() != null )
+    private void removeMaterialView() {
+        if (getParent() != null)
             ((ViewGroup) getParent()).removeView(this);
     }
 
@@ -506,6 +506,13 @@ public class MaterialIntroView extends RelativeLayout {
                 addView(infoView);
 
                 infoView.setVisibility(VISIBLE);
+
+                infoView.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dismiss();
+                    }
+                });
 
             }
         });
@@ -618,7 +625,7 @@ public class MaterialIntroView extends RelativeLayout {
         this.isInfoEnabled = isInfoEnabled;
     }
 
-    private void enableDotView(boolean isDotViewEnabled){
+    private void enableDotView(boolean isDotViewEnabled) {
         this.isDotViewEnabled = isDotViewEnabled;
     }
 
@@ -645,7 +652,7 @@ public class MaterialIntroView extends RelativeLayout {
         this.materialIntroListener = materialIntroListener;
     }
 
-    private void setPerformClick(boolean isPerformClick){
+    private void setPerformClick(boolean isPerformClick) {
         this.isPerformClick = isPerformClick;
     }
 
@@ -750,7 +757,7 @@ public class MaterialIntroView extends RelativeLayout {
             return this;
         }
 
-        public Builder setShowcaseViewCase(boolean showcaseViewCase){
+        public Builder setShowcaseViewCase(boolean showcaseViewCase) {
             materialIntroView.setShowcaseViewCase(showcaseViewCase);
             return this;
         }
