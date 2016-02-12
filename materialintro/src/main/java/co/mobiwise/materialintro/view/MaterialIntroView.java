@@ -7,14 +7,12 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.os.Build;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.TypedValue;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -221,30 +219,7 @@ public class MaterialIntroView extends RelativeLayout {
         LayoutInflater vi = (LayoutInflater) activity.getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View showcaseView = vi.inflate(viewId, null);
 
-        RelativeLayout.LayoutParams showcaseParams = new RelativeLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-
-        showcaseView.setLayoutParams(showcaseParams);
-
-        // http://stackoverflow.com/questions/1016896/get-screen-dimensions-in-pixels
-        Display display = activity.getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int widthWin = size.x;
-        int heightWin = size.y;
-
-        // http://stackoverflow.com/questions/8200896/how-to-find-the-width-of-the-a-view-before-the-view-is-displayed
-        showcaseView.measure(widthWin, heightWin);
-
-        float width = showcaseView.getMeasuredWidth();
-        float height = showcaseView.getMeasuredHeight();
-
-        float xPx = (widthWin - width) / 2;
-        float yPx = (heightWin - height) / 2;
-
-        showcaseView.setX(xPx);
-        showcaseView.setY(yPx);
+        Utils.prepareShowcaseView(activity, showcaseView);
 
         return showcaseView;
     }
