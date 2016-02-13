@@ -267,6 +267,7 @@ public class MaterialIntroView extends RelativeLayout {
         textViewInfo = (TextView) layoutInfo.findViewById(R.id.textview_info);
         textViewInfo.setTextColor(colorTextViewInfo);
 
+        // TODO bug java.lang.OutOfMemoryError
         dotView = LayoutInflater.from(getContext()).inflate(R.layout.dotview, null);
         dotView.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
 
@@ -436,6 +437,8 @@ public class MaterialIntroView extends RelativeLayout {
             public void onAnimationEnd() {
                 setVisibility(GONE);
                 removeMaterialView();
+
+                bitmap.recycle();
 
                 if (materialIntroListener != null)
                     materialIntroListener.onUserClicked(materialIntroViewId);
