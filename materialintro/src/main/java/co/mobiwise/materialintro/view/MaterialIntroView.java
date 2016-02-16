@@ -722,8 +722,12 @@ public class MaterialIntroView extends RelativeLayout {
         }
 
         public Builder setInfoText(String infoText) {
-            materialIntroView.enableInfoDialog(true);
-            materialIntroView.setTextViewInfo(infoText);
+            if(Utils.isNullOrEmpty(infoText)){
+                materialIntroView.enableInfoDialog(false);
+            }else {
+                materialIntroView.enableInfoDialog(true);
+                materialIntroView.setTextViewInfo(infoText);
+            }
             return this;
         }
 

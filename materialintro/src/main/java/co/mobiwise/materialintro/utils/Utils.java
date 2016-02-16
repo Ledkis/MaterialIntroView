@@ -71,4 +71,12 @@ public class Utils {
 
         return view;
     }
+
+    public static String valueOrDefault(String string, String defaultString) {
+        return isNullOrEmpty(string) ? defaultString : string;
+    }
+
+    public static boolean isNullOrEmpty(CharSequence s) {
+        return s == null || s.length() == 0;
+    }
 }
