@@ -192,6 +192,9 @@ public class MaterialIntroView extends RelativeLayout {
      */
     private boolean isPerformClick;
 
+    /**
+     * Associate a custom view with the showcase
+     */
     private boolean showcaseViewCase;
 
     public MaterialIntroView(Context context) {
