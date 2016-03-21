@@ -222,7 +222,7 @@ public class MaterialIntroView extends RelativeLayout {
         LayoutInflater vi = (LayoutInflater) activity.getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View showcaseView = vi.inflate(viewId, null);
 
-        Utils.prepareShowcaseView(activity, showcaseView);
+        Utils.prepareShowcaseView(showcaseView);
 
         return showcaseView;
     }
@@ -375,7 +375,8 @@ public class MaterialIntroView extends RelativeLayout {
                 return true;
             case MotionEvent.ACTION_UP:
 
-                if (isTouchOnFocus || dismissOnTouch)
+                // Make sure we can dismiss in every case if dismissOnTouch
+                if (dismissOnTouch)
                     dismiss();
 
                 // TODO not work
@@ -410,6 +411,43 @@ public class MaterialIntroView extends RelativeLayout {
             return;
 
         ((ViewGroup) activity.getWindow().getDecorView()).addView(this);
+
+        setReady(true);
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (isFadeAnimationEnabled)
+                    AnimationFactory.animateFadeIn(MaterialIntroView.this, fadeInAnimationDuration, new AnimationListener.OnAnimationStartListener() {
+                        @Override
+                        public void onAnimationStart() {
+                            setVisibility(VISIBLE);
+                        }
+                    });
+                else
+                    setVisibility(VISIBLE);
+            }
+        }, delayMillis);
+
+    }
+
+    /**
+     * Shows material view within a viewGroup
+     *
+     * @param layout
+     */
+    private void show(ViewGroup layout) {
+
+        if (preferencesManager.isDisplayed(materialIntroViewId))
+            return;
+
+        RelativeLayout.LayoutParams newParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.MATCH_PARENT);
+        newParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+        setLayoutParams(newParams);
+
+        layout.addView(this);
 
         setReady(true);
 
@@ -786,6 +824,11 @@ public class MaterialIntroView extends RelativeLayout {
 
         public MaterialIntroView show() {
             build().show(activity);
+            return materialIntroView;
+        }
+
+        public MaterialIntroView show(ViewGroup layout) {
+            build().show(layout);
             return materialIntroView;
         }
 

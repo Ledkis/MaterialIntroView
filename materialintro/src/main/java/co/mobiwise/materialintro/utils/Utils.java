@@ -42,32 +42,13 @@ public class Utils {
                 y < (vy + vHeight / 2);
     }
 
-    public static View prepareShowcaseView(Activity activity, View view) {
+    public static View prepareShowcaseView(View view) {
 
-        RelativeLayout.LayoutParams showcaseParams = new RelativeLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-
-        view.setLayoutParams(showcaseParams);
-
-        // http://stackoverflow.com/questions/1016896/get-screen-dimensions-in-pixels
-        Display display = activity.getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int widthWin = size.x;
-        int heightWin = size.y;
-
-        // http://stackoverflow.com/questions/8200896/how-to-find-the-width-of-the-a-view-before-the-view-is-displayed
-        view.measure(widthWin, heightWin);
-
-        float width = view.getMeasuredWidth();
-        float height = view.getMeasuredHeight();
-
-        float xPx = (widthWin - width) / 2;
-        float yPx = (heightWin - height) / 2;
-
-        view.setX(xPx);
-        view.setY(yPx);
+        RelativeLayout.LayoutParams newParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
+        newParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+        view.setLayoutParams(newParams);
 
         return view;
     }
